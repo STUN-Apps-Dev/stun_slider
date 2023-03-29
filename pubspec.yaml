@@ -1,0 +1,23 @@
+name: stun_template
+description: A new Flutter package project.
+version: 1.0.0
+homepage: "none"
+
+environment:
+  sdk: ">=2.19.2 <3.0.0"
+  flutter: ">=1.17.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^2.0.0
+
+flutter:
+  uses-material-design: true
+
+  # assets:
+  #   - packages/stun_template/logo.png
