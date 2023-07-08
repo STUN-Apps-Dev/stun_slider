@@ -5,12 +5,14 @@ class StunSliderWidget extends StatefulWidget {
   final Widget Function(BuildContext, int) itemBuilder;
   final int itemCount;
   final StunSliderController? controller;
+  final Clip clipBehavior;
   const StunSliderWidget({
     Key? key,
     required this.itemBuilder,
     required this.itemCount,
     this.height = 300,
     this.controller,
+    this.clipBehavior = Clip.hardEdge,
   }) : super(key: key);
 
   @override
@@ -48,6 +50,7 @@ class _StunSliderWidgetState extends State<StunSliderWidget>
       tween: Tween<double>(begin: _heights[0], end: _currentHeight),
       builder: (context, value, child) => SizedBox(height: value, child: child),
       child: PageView.builder(
+        clipBehavior: widget.clipBehavior,
         itemBuilder: (context, index) {
           return OverflowBox(
             minHeight: 0,
