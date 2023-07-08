@@ -26,23 +26,23 @@ class StunSliderController extends ChangeNotifier {
     if (value != _index) {
       pageController?.animateToPage(
         value,
-        duration: const Duration(milliseconds: 200),
-        curve: Curves.easeIn,
+        duration: const Duration(milliseconds: 400),
+        curve: Curves.ease,
       );
     }
   }
 
   void nextPage() {
     pageController?.nextPage(
-      duration: const Duration(milliseconds: 200),
-      curve: Curves.easeIn,
+      duration: const Duration(milliseconds: 400),
+      curve: Curves.ease,
     );
   }
 
   void previousPage() {
     pageController?.previousPage(
-      duration: const Duration(milliseconds: 200),
-      curve: Curves.easeIn,
+      duration: const Duration(milliseconds: 400),
+      curve: Curves.ease,
     );
   }
 
