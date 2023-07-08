@@ -1,7 +1,6 @@
 part of 'stun_slider.dart';
 
 class StunSliderWidget extends StatefulWidget {
-  final double height;
   final Widget Function(BuildContext, int) itemBuilder;
   final int itemCount;
   final StunSliderController? controller;
@@ -10,7 +9,6 @@ class StunSliderWidget extends StatefulWidget {
     Key? key,
     required this.itemBuilder,
     required this.itemCount,
-    this.height = 300,
     this.controller,
     this.clipBehavior = Clip.hardEdge,
   }) : super(key: key);
@@ -50,6 +48,8 @@ class _StunSliderWidgetState extends State<StunSliderWidget>
       tween: Tween<double>(begin: _heights[0], end: _currentHeight),
       builder: (context, value, child) => SizedBox(height: value, child: child),
       child: PageView.builder(
+        physics:
+            widget.itemCount < 2 ? const NeverScrollableScrollPhysics() : null,
         clipBehavior: widget.clipBehavior,
         itemBuilder: (context, index) {
           return OverflowBox(
