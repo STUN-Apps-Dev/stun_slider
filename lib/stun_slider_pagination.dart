@@ -29,6 +29,7 @@ class _StunSliderPaginationState extends State<StunSliderPagination> {
 
   @override
   Widget build(BuildContext context) {
+    if (widget.itemCount < 2) return const SizedBox.shrink();
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: List.generate(
