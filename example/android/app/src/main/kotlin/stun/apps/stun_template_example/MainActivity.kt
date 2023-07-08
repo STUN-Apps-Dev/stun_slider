@@ -1,4 +1,4 @@
-package stun.apps.stun_template_example
+package stun.apps.stun_slider_example
 
 import io.flutter.embedding.android.FlutterActivity
 

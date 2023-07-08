@@ -1,7 +1,7 @@
 #!/bin/sh
 # This is a generated file; do not edit or check into version control.
 export "FLUTTER_ROOT=/Users/perpointt/Dev/flutter"
-export "FLUTTER_APPLICATION_PATH=/Users/perpointt/Dev/stun_components/stun_template"
+export "FLUTTER_APPLICATION_PATH=/Users/perpointt/Dev/stun_components/stun_slider"
 export "COCOAPODS_PARALLEL_CODE_SIGN=true"
 export "FLUTTER_TARGET=lib/main.dart"
 export "FLUTTER_BUILD_DIR=./build"

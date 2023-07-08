@@ -1,4 +1,4 @@
-name: stun_template_example
+name: stun_slider_example
 description: A new Flutter project.
 publish_to: "none"
 
@@ -13,7 +13,7 @@ dependencies:
 
   cupertino_icons: ^1.0.2
 
-  stun_template:
+  stun_slider:
     path: ../
 
 dev_dependencies:

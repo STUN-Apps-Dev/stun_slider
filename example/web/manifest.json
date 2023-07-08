@@ -1,6 +1,6 @@
 {
-    "name": "stun_template_example",
-    "short_name": "stun_template_example",
+    "name": "stun_slider_example",
+    "short_name": "stun_slider_example",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",

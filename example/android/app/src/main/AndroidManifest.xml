@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="stun.apps.stun_template_example">
+    package="stun.apps.stun_slider_example">
     <application
-        android:label="stun_template_example"
+        android:label="stun_slider_example"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity
