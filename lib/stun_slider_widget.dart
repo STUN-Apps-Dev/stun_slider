@@ -46,12 +46,19 @@ class _StunSliderWidgetState extends State<StunSliderWidget>
   @override
   Widget build(BuildContext context) {
     if (widget.fixed) {
-      return _BodyWidget(
-        clipBehavior: widget.clipBehavior,
-        controller: _controller.pageController,
-        itemCount: widget.itemCount,
-        itemBuilder: widget.itemBuilder,
-        onSizeChanged: _onSizeChanged,
+      return LayoutBuilder(
+        builder: (_, constraints) {
+          return SizedBox(
+            height: constraints.maxHeight,
+            child: _BodyWidget(
+              clipBehavior: widget.clipBehavior,
+              controller: _controller.pageController,
+              itemCount: widget.itemCount,
+              itemBuilder: widget.itemBuilder,
+              onSizeChanged: _onSizeChanged,
+            ),
+          );
+        },
       );
     }
 
