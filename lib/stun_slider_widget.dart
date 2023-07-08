@@ -29,10 +29,12 @@ class _StunSliderWidgetState extends State<StunSliderWidget>
   void initState() {
     _heights = List.generate(widget.itemCount, (index) => 0.0);
     _controller = widget.controller ?? StunSliderController();
-    _controller.addListener(() => setState(() {}));
+    _controller.addListener(_listener);
 
     super.initState();
   }
+
+  void _listener() => setState(() {});
 
   void _onSizeChange(int index, Size size) {
     setState(() => _heights[index] = size.height);
@@ -68,6 +70,7 @@ class _StunSliderWidgetState extends State<StunSliderWidget>
 
   @override
   void dispose() {
+    _controller.removeListener(_listener);
     _controller.dispose();
     super.dispose();
   }

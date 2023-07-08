@@ -20,12 +20,17 @@ class StunSliderNavButton extends StatefulWidget {
 class _StunSliderNavButtonState extends State<StunSliderNavButton> {
   @override
   void initState() {
-    widget.controller.addListener(() => setState(() {}));
+    if (widget.itemCount >= 2) {
+      widget.controller.addListener(_listener);
+    }
     super.initState();
   }
 
+  void _listener() => setState(() {});
+
   @override
   Widget build(BuildContext context) {
+    if (widget.itemCount < 2) return const SizedBox.shrink();
     return Opacity(
       opacity: _isActive ? 1 : 0.7,
       child: IgnorePointer(

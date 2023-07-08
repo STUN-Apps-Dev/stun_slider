@@ -21,9 +21,11 @@ class StunSliderPagination extends StatefulWidget {
 class _StunSliderPaginationState extends State<StunSliderPagination> {
   @override
   void initState() {
-    widget.controller.addListener(() => setState(() {}));
+    widget.controller.addListener(_listener);
     super.initState();
   }
+
+  void _listener() => setState(() {});
 
   @override
   Widget build(BuildContext context) {

@@ -48,7 +48,7 @@ class _MyHomePageState extends State<MyHomePage> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           StunSliderWidget(
-            itemCount: 3,
+            itemCount: colors.length,
             itemBuilder: (_, index) {
               return Container(
                 height: index == 1 ? 500 : 300,
@@ -64,7 +64,7 @@ class _MyHomePageState extends State<MyHomePage> {
             children: [
               StunSliderNavButton(
                 direction: StunSliderNavDirection.prev,
-                itemCount: 3,
+                itemCount: colors.length,
                 controller: _controller,
                 child: const Icon(Icons.arrow_back),
               ),
@@ -78,15 +78,22 @@ class _MyHomePageState extends State<MyHomePage> {
                     child: Center(child: Text('$index')),
                   );
                 },
-                itemCount: 3,
+                itemCount: colors.length,
               ),
               StunSliderNavButton(
                 direction: StunSliderNavDirection.next,
-                itemCount: 3,
+                itemCount: colors.length,
                 controller: _controller,
                 child: const Icon(Icons.arrow_forward),
               ),
             ],
+          ),
+          const SizedBox(height: 16),
+          StunSliderHelper(
+            controller: _controller,
+            itemBuilder: (_, index) {
+              return Text('${index + 1} / ${colors.length}');
+            },
           ),
         ],
       ),
