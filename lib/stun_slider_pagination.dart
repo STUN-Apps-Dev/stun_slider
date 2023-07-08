@@ -56,4 +56,10 @@ class _StunSliderPaginationState extends State<StunSliderPagination> {
   bool _isActive(int index) {
     return index == widget.controller.index;
   }
+
+  @override
+  void dispose() {
+    widget.controller.removeListener(_listener);
+    super.dispose();
+  }
 }

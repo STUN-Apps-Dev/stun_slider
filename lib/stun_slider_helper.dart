@@ -26,4 +26,10 @@ class _StunSliderHelperState extends State<StunSliderHelper> {
   Widget build(BuildContext context) {
     return widget.itemBuilder(context, widget.controller.index);
   }
+
+  @override
+  void dispose() {
+    widget.controller.removeListener(_listener);
+    super.dispose();
+  }
 }

@@ -61,4 +61,10 @@ class _StunSliderNavButtonState extends State<StunSliderNavButton> {
       return widget.controller.index == 0 ? false : true;
     }
   }
+
+  @override
+  void dispose() {
+    widget.controller.removeListener(_listener);
+    super.dispose();
+  }
 }

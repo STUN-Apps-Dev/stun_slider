@@ -71,7 +71,6 @@ class _StunSliderWidgetState extends State<StunSliderWidget>
   @override
   void dispose() {
     _controller.removeListener(_listener);
-    _controller.dispose();
     super.dispose();
   }
 }
