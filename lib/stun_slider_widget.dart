@@ -5,12 +5,14 @@ class StunSliderWidget extends StatefulWidget {
   final int itemCount;
   final StunSliderController? controller;
   final Clip clipBehavior;
+  final bool fixed;
   const StunSliderWidget({
     Key? key,
     required this.itemBuilder,
     required this.itemCount,
     this.controller,
     this.clipBehavior = Clip.hardEdge,
+    this.fixed = false,
   }) : super(key: key);
 
   @override
@@ -23,7 +25,7 @@ class _StunSliderWidgetState extends State<StunSliderWidget>
 
   late List<double> _heights;
 
-  double get _currentHeight => _heights[_controller.index ?? 0];
+  double get _currentHeight => _heights[_controller.index];
 
   @override
   void initState() {
@@ -36,37 +38,37 @@ class _StunSliderWidgetState extends State<StunSliderWidget>
 
   void _listener() => setState(() {});
 
-  void _onSizeChange(int index, Size size) {
+  void _onSizeChanged(int index, Size size) {
+    if (widget.fixed) return;
     setState(() => _heights[index] = size.height);
   }
 
   @override
   Widget build(BuildContext context) {
+    if (widget.fixed) {
+      return _BodyWidget(
+        clipBehavior: widget.clipBehavior,
+        controller: _controller.pageController,
+        itemCount: widget.itemCount,
+        itemBuilder: widget.itemBuilder,
+        onSizeChanged: _onSizeChanged,
+      );
+    }
+
     return TweenAnimationBuilder<double>(
       curve: Curves.easeInOutCubic,
       duration: const Duration(milliseconds: 200),
       tween: Tween<double>(begin: _heights[0], end: _currentHeight),
-      builder: (context, value, child) => SizedBox(height: value, child: child),
-      child: PageView.builder(
-        physics:
-            widget.itemCount < 2 ? const NeverScrollableScrollPhysics() : null,
+      builder: (context, value, child) => SizedBox(
+        height: value,
+        child: child,
+      ),
+      child: _BodyWidget(
         clipBehavior: widget.clipBehavior,
-        itemBuilder: (context, index) {
-          return OverflowBox(
-            minHeight: 0,
-            maxHeight: double.infinity,
-            alignment: Alignment.topCenter,
-            child: SizeReportingWidget(
-              onSizeChange: (size) => _onSizeChange(index, size),
-              child: Align(
-                child: widget.itemBuilder(context, index),
-              ),
-            ),
-          );
-        },
-        itemCount: widget.itemCount,
         controller: _controller.pageController,
-        scrollBehavior: StunSliderScrollBehavior(),
+        itemCount: widget.itemCount,
+        itemBuilder: widget.itemBuilder,
+        onSizeChanged: _onSizeChanged,
       ),
     );
   }
@@ -78,14 +80,54 @@ class _StunSliderWidgetState extends State<StunSliderWidget>
   }
 }
 
+class _BodyWidget extends StatelessWidget {
+  final Widget Function(BuildContext, int) itemBuilder;
+  final int itemCount;
+  final Clip clipBehavior;
+  final void Function(int, Size) onSizeChanged;
+  final PageController? controller;
+  const _BodyWidget({
+    Key? key,
+    required this.itemBuilder,
+    required this.itemCount,
+    required this.clipBehavior,
+    required this.onSizeChanged,
+    required this.controller,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return PageView.builder(
+      physics: itemCount < 2 ? const NeverScrollableScrollPhysics() : null,
+      clipBehavior: clipBehavior,
+      itemBuilder: (context, index) {
+        return OverflowBox(
+          minHeight: 0,
+          maxHeight: double.infinity,
+          alignment: Alignment.topCenter,
+          child: SizeReportingWidget(
+            onSizeChanged: (size) => onSizeChanged(index, size),
+            child: Align(
+              child: itemBuilder(context, index),
+            ),
+          ),
+        );
+      },
+      itemCount: itemCount,
+      controller: controller,
+      scrollBehavior: StunSliderScrollBehavior(),
+    );
+  }
+}
+
 class SizeReportingWidget extends StatefulWidget {
   final Widget child;
-  final ValueChanged<Size> onSizeChange;
+  final ValueChanged<Size> onSizeChanged;
 
   const SizeReportingWidget({
     Key? key,
     required this.child,
-    required this.onSizeChange,
+    required this.onSizeChanged,
   }) : super(key: key);
 
   @override
@@ -108,7 +150,7 @@ class _SizeReportingWidgetState extends State<SizeReportingWidget> {
     final size = context.size;
     if (_oldSize != size && size != null) {
       _oldSize = size;
-      widget.onSizeChange(size);
+      widget.onSizeChanged(size);
     }
   }
 }
