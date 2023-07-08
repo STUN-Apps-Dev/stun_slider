@@ -46,17 +46,12 @@ class _StunSliderWidgetState extends State<StunSliderWidget>
   @override
   Widget build(BuildContext context) {
     if (widget.fixed) {
-      return LayoutBuilder(
-        builder: (_, constraints) {
-          return _BodyWidget(
-            clipBehavior: widget.clipBehavior,
-            controller: _controller.pageController,
-            itemCount: widget.itemCount,
-            itemBuilder: widget.itemBuilder,
-            onSizeChanged: _onSizeChanged,
-            height: constraints.maxHeight,
-          );
-        },
+      return _BodyWidget(
+        clipBehavior: widget.clipBehavior,
+        controller: _controller.pageController,
+        itemCount: widget.itemCount,
+        itemBuilder: widget.itemBuilder,
+        onSizeChanged: _onSizeChanged,
       );
     }
 
@@ -91,7 +86,6 @@ class _BodyWidget extends StatelessWidget {
   final Clip clipBehavior;
   final void Function(int, Size) onSizeChanged;
   final PageController? controller;
-  final double? height;
 
   const _BodyWidget({
     Key? key,
@@ -100,7 +94,6 @@ class _BodyWidget extends StatelessWidget {
     required this.clipBehavior,
     required this.onSizeChanged,
     required this.controller,
-    this.height,
   }) : super(key: key);
 
   @override
@@ -116,10 +109,7 @@ class _BodyWidget extends StatelessWidget {
           child: SizeReportingWidget(
             onSizeChanged: (size) => onSizeChanged(index, size),
             child: Align(
-              child: SizedBox(
-                height: height,
-                child: itemBuilder(context, index),
-              ),
+              child: itemBuilder(context, index),
             ),
           ),
         );
