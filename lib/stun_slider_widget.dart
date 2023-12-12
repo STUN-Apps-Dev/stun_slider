@@ -57,7 +57,7 @@ class _StunSliderWidgetState extends State<StunSliderWidget>
 
     return TweenAnimationBuilder<double>(
       curve: Curves.easeInOutCubic,
-      duration: const Duration(milliseconds: 200),
+      duration: Duration.zero,
       tween: Tween<double>(begin: _heights[0], end: _currentHeight),
       builder: (context, value, child) => SizedBox(
         height: value,
