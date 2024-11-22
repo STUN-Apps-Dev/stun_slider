@@ -1,157 +1,227 @@
 part of 'stun_slider.dart';
 
 class StunSliderWidget extends StatefulWidget {
-  final Widget Function(BuildContext, int) itemBuilder;
   final int itemCount;
+
+  final Widget Function(BuildContext context, int index) itemBuilder;
+
   final StunSliderController? controller;
+
   final Clip clipBehavior;
-  final bool fixed;
-  const StunSliderWidget({
-    Key? key,
-    required this.itemBuilder,
+
+  const StunSliderWidget.builder({
+    super.key,
     required this.itemCount,
+    required this.itemBuilder,
     this.controller,
     this.clipBehavior = Clip.hardEdge,
-    this.fixed = false,
-  }) : super(key: key);
+  });
 
   @override
-  State<StunSliderWidget> createState() => _StunSliderWidgetState();
+  State<StatefulWidget> createState() => _StunSliderWidgetState();
 }
 
-class _StunSliderWidgetState extends State<StunSliderWidget>
-    with TickerProviderStateMixin {
+class _StunSliderWidgetState extends State<StunSliderWidget> {
+  late List<double> _sizes;
+  int _currentPage = 0;
+  int _previousPage = 0;
+  bool _shouldDisposePageController = false;
+  bool _firstPageLoaded = false;
+
+  double get _currentSize => _sizes[_currentPage];
+
+  double get _previousSize => _sizes[_previousPage];
+
   late final StunSliderController _controller;
-
-  late List<double> _heights;
-
-  double get _currentHeight => _heights[_controller.index];
 
   @override
   void initState() {
-    _heights = List.generate(widget.itemCount, (index) => 0.0);
-    _controller = widget.controller ?? StunSliderController();
-    _controller.addListener(_listener);
-
     super.initState();
-  }
-
-  void _listener() => setState(() {});
-
-  void _onSizeChanged(int index, Size size) {
-    if (widget.fixed) return;
-    setState(() => _heights[index] = size.height);
+    _sizes = _prepareSizes();
+    _controller = widget.controller ?? StunSliderController();
+    _controller.pageController.addListener(_updatePage);
+    _currentPage = _controller.index.clamp(0, _sizes.length - 1);
+    _previousPage = _currentPage - 1 < 0 ? 0 : _currentPage - 1;
+    _shouldDisposePageController = widget.controller == null;
   }
 
   @override
-  Widget build(BuildContext context) {
-    if (widget.fixed) {
-      return _BodyWidget(
-        clipBehavior: widget.clipBehavior,
-        controller: _controller.pageController,
-        itemCount: widget.itemCount,
-        itemBuilder: widget.itemBuilder,
-        onSizeChanged: _onSizeChanged,
-      );
+  void didUpdateWidget(covariant StunSliderWidget oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.controller != widget.controller) {
+      oldWidget.controller?.removeListener(_updatePage);
+      _controller.pageController.addListener(_updatePage);
+      _shouldDisposePageController = widget.controller == null;
     }
-
-    return TweenAnimationBuilder<double>(
-      curve: Curves.easeInOutCubic,
-      duration: Duration.zero,
-      tween: Tween<double>(begin: _heights[0], end: _currentHeight),
-      builder: (context, value, child) => SizedBox(
-        height: value,
-        child: child,
-      ),
-      child: _BodyWidget(
-        clipBehavior: widget.clipBehavior,
-        controller: _controller.pageController,
-        itemCount: widget.itemCount,
-        itemBuilder: widget.itemBuilder,
-        onSizeChanged: _onSizeChanged,
-      ),
-    );
+    if (_shouldReinitializeHeights(oldWidget)) {
+      _reinitializeSizes();
+    }
   }
 
   @override
   void dispose() {
-    _controller.removeListener(_listener);
+    _controller.pageController.removeListener(_updatePage);
+    if (_shouldDisposePageController) {
+      _controller.dispose();
+    }
     super.dispose();
   }
-}
-
-class _BodyWidget extends StatelessWidget {
-  final Widget Function(BuildContext, int) itemBuilder;
-  final int itemCount;
-  final Clip clipBehavior;
-  final void Function(int, Size) onSizeChanged;
-  final PageController? controller;
-
-  const _BodyWidget({
-    Key? key,
-    required this.itemBuilder,
-    required this.itemCount,
-    required this.clipBehavior,
-    required this.onSizeChanged,
-    required this.controller,
-  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    return TweenAnimationBuilder<double>(
+      curve: Curves.easeInOutCubic,
+      duration: _getDuration(),
+      tween: Tween<double>(begin: _previousSize, end: _currentSize),
+      builder: (context, value, child) => SizedBox(
+        height: value,
+        width: null,
+        child: child,
+      ),
+      child: _buildPageView(),
+    );
+  }
+
+  bool _shouldReinitializeHeights(StunSliderWidget oldWidget) {
+    return oldWidget.itemCount != widget.itemCount;
+  }
+
+  void _reinitializeSizes() {
+    final currentPageSize = _sizes[_currentPage];
+    _sizes = _prepareSizes();
+
+    if (_currentPage >= _sizes.length) {
+      final differenceFromPreviousToCurrent = _previousPage - _currentPage;
+      _currentPage = _sizes.length - 1;
+
+      _previousPage = (_currentPage + differenceFromPreviousToCurrent)
+          .clamp(0, _sizes.length - 1);
+    }
+
+    _previousPage = _previousPage.clamp(0, _sizes.length - 1);
+    _sizes[_currentPage] = currentPageSize;
+  }
+
+  Duration _getDuration() {
+    if (_firstPageLoaded) {
+      return const Duration(milliseconds: 200);
+    }
+    return Duration.zero;
+  }
+
+  Widget _buildPageView() {
+    final physics =
+        widget.itemCount < 2 ? const NeverScrollableScrollPhysics() : null;
     return PageView.builder(
-      physics: itemCount < 2 ? const NeverScrollableScrollPhysics() : null,
-      clipBehavior: clipBehavior,
-      itemBuilder: (context, index) {
-        return OverflowBox(
-          minHeight: 0,
-          maxHeight: double.infinity,
-          alignment: Alignment.topCenter,
-          child: SizeReportingWidget(
-            onSizeChanged: (size) => onSizeChanged(index, size),
-            child: Align(
-              child: itemBuilder(context, index),
-            ),
-          ),
-        );
-      },
-      itemCount: itemCount,
-      controller: controller,
+      controller: _controller.pageController,
+      itemBuilder: _itemBuilder,
+      itemCount: widget.itemCount,
+      physics: physics,
+      clipBehavior: widget.clipBehavior,
       scrollBehavior: StunSliderScrollBehavior(),
+    );
+  }
+
+  List<double> _prepareSizes() {
+    return List.filled(widget.itemCount, 0.0);
+  }
+
+  void _updatePage() {
+    final newPage = _controller.pageController.page!.round();
+    if (_currentPage != newPage) {
+      setState(() {
+        _firstPageLoaded = true;
+        _previousPage = _currentPage;
+        _currentPage = newPage;
+      });
+    }
+  }
+
+  Widget _itemBuilder(BuildContext context, int index) {
+    final item = widget.itemBuilder(context, index);
+    return OverflowPage(
+      onSizeChange: (size) => setState(
+        () => _sizes[index] = size.height,
+      ),
+      alignment: Alignment.center,
+      scrollDirection: Axis.horizontal,
+      child: Align(
+        child: item,
+      ),
+    );
+  }
+}
+
+class OverflowPage extends StatelessWidget {
+  final ValueChanged<Size> onSizeChange;
+  final Widget child;
+  final Alignment alignment;
+  final Axis scrollDirection;
+
+  const OverflowPage({
+    super.key,
+    required this.onSizeChange,
+    required this.child,
+    required this.alignment,
+    required this.scrollDirection,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return OverflowBox(
+      minHeight: 0,
+      maxHeight: double.infinity,
+      alignment: Alignment.topCenter,
+      child: SizeReportingWidget(
+        onSizeChange: onSizeChange,
+        child: child,
+      ),
     );
   }
 }
 
 class SizeReportingWidget extends StatefulWidget {
   final Widget child;
-  final ValueChanged<Size> onSizeChanged;
+  final ValueChanged<Size> onSizeChange;
 
   const SizeReportingWidget({
     Key? key,
     required this.child,
-    required this.onSizeChanged,
+    required this.onSizeChange,
   }) : super(key: key);
 
   @override
-  State<SizeReportingWidget> createState() => _SizeReportingWidgetState();
+  State<StatefulWidget> createState() => _SizeReportingWidgetState();
 }
 
 class _SizeReportingWidgetState extends State<SizeReportingWidget> {
+  final _widgetKey = GlobalKey();
   Size? _oldSize;
 
   @override
   Widget build(BuildContext context) {
     WidgetsBinding.instance.addPostFrameCallback((_) => _notifySize());
-    return widget.child;
+    return NotificationListener<SizeChangedLayoutNotification>(
+      onNotification: (_) {
+        WidgetsBinding.instance.addPostFrameCallback((_) => _notifySize());
+        return true;
+      },
+      child: SizeChangedLayoutNotifier(
+        child: Container(
+          key: _widgetKey,
+          child: widget.child,
+        ),
+      ),
+    );
   }
 
   void _notifySize() {
-    if (!mounted) {
-      return;
-    }
+    final context = _widgetKey.currentContext;
+    if (context == null) return;
     final size = context.size;
-    if (_oldSize != size && size != null) {
+    if (_oldSize != size) {
       _oldSize = size;
-      widget.onSizeChanged(size);
+      widget.onSizeChange(size!);
     }
   }
 }

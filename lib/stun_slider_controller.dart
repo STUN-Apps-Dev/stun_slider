@@ -1,17 +1,17 @@
 part of 'stun_slider.dart';
 
 class StunSliderController extends ChangeNotifier {
-  PageController? _controller;
-  PageController? get pageController => _controller;
+  late PageController _controller;
+  PageController get pageController => _controller;
   int _index = 0;
   int get index => _index;
 
   StunSliderController([PageController? controller]) {
-    _controller = controller;
-    setIndex(pageController?.initialPage ?? 0);
+    _controller = controller ?? PageController();
+    setIndex(pageController.initialPage);
 
-    _controller?.addListener(() {
-      setIndex(_controller?.page?.round() ?? 0);
+    _controller.addListener(() {
+      setIndex(_controller.page?.round() ?? 0);
     });
   }
 
@@ -24,7 +24,7 @@ class StunSliderController extends ChangeNotifier {
 
   void jumpToIndex(int value) {
     if (value != _index) {
-      pageController?.animateToPage(
+      pageController.animateToPage(
         value,
         duration: const Duration(milliseconds: 400),
         curve: Curves.ease,
@@ -33,14 +33,14 @@ class StunSliderController extends ChangeNotifier {
   }
 
   void nextPage() {
-    pageController?.nextPage(
+    pageController.nextPage(
       duration: const Duration(milliseconds: 400),
       curve: Curves.ease,
     );
   }
 
   void previousPage() {
-    pageController?.previousPage(
+    pageController.previousPage(
       duration: const Duration(milliseconds: 400),
       curve: Curves.ease,
     );
@@ -48,7 +48,7 @@ class StunSliderController extends ChangeNotifier {
 
   @override
   void dispose() {
-    pageController?.dispose();
+    pageController.dispose();
     super.dispose();
   }
 }

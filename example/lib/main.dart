@@ -1,5 +1,9 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:stun_slider/stun_slider.dart';
+import 'package:stun_slider_example/slider_item.dart';
+import 'package:stun_slider_example/slider_item_widget.dart';
 
 void main() {
   runApp(const MyApp());
@@ -24,13 +28,13 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  static const colors = [
-    Colors.red,
-    Colors.blue,
-    Colors.green,
-  ];
-
   late final StunSliderController _controller;
+
+  final List<SliderItem> _items = [
+    SliderItem.random(),
+    SliderItem.random(),
+    SliderItem.random(),
+  ];
 
   @override
   void initState() {
@@ -44,16 +48,38 @@ class _MyHomePageState extends State<MyHomePage> {
       appBar: AppBar(
         title: const Text('Stun Slider Demo App'),
       ),
+      floatingActionButton: Row(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: [
+          FloatingActionButton(
+            child: const Icon(Icons.add),
+            onPressed: () {
+              _items.add(SliderItem.random());
+              _controller.jumpToIndex(_items.length - 1);
+
+              setState(() {});
+            },
+          ),
+          const SizedBox(width: 16),
+          FloatingActionButton(
+            child: const Icon(Icons.minimize),
+            onPressed: () {
+              final random = Random();
+              _items.removeAt(random.nextInt(_items.length));
+              _controller.jumpToIndex(_items.length - 1);
+              setState(() {});
+            },
+          ),
+        ],
+      ),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          StunSliderWidget(
-            itemCount: colors.length,
+          StunSliderWidget.builder(
+            itemCount: _items.length,
             itemBuilder: (_, index) {
-              return Container(
-                height: index == 1 ? 500 : 300,
-                width: 300,
-                color: colors[index],
+              return SliderItemWidget(
+                item: _items[index],
               );
             },
             controller: _controller,
@@ -64,7 +90,7 @@ class _MyHomePageState extends State<MyHomePage> {
             children: [
               StunSliderNavButton(
                 direction: StunSliderNavDirection.prev,
-                itemCount: colors.length,
+                itemCount: _items.length,
                 controller: _controller,
                 child: const Icon(Icons.arrow_back),
               ),
@@ -78,11 +104,11 @@ class _MyHomePageState extends State<MyHomePage> {
                     child: Center(child: Text('$index')),
                   );
                 },
-                itemCount: colors.length,
+                itemCount: _items.length,
               ),
               StunSliderNavButton(
                 direction: StunSliderNavDirection.next,
-                itemCount: colors.length,
+                itemCount: _items.length,
                 controller: _controller,
                 child: const Icon(Icons.arrow_forward),
               ),
@@ -92,7 +118,7 @@ class _MyHomePageState extends State<MyHomePage> {
           StunSliderHelper(
             controller: _controller,
             itemBuilder: (_, index) {
-              return Text('${index + 1} / ${colors.length}');
+              return Text('${index + 1} / ${_items.length}');
             },
           ),
         ],

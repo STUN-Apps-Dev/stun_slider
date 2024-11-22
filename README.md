@@ -8,7 +8,7 @@
     ```yaml
     stun_slider:
       git:
-        url: ssh://git@git.jetbrains.space/stun/stun-packages/stun-slider.git
+        url: https://git.stun-apps.com/open_source/flutter/stun_slider.git
     ```
 Теперь плагин готов к использованию.
 
