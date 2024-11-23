@@ -106,7 +106,7 @@ _controller.jumpToIndex(1);
 
 Additional UI components allow you to create custom control elements for the slider.
 
-To work in conjunction with the slider, all components need to be unified with a common controller.
+To synchronize with the slider, you need to combine all components with a common controller.
 
 #### Buttons for Back/Forward Navigation
 
