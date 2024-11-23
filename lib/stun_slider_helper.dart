@@ -4,10 +4,10 @@ class StunSliderHelper extends StatefulWidget {
   final StunSliderController controller;
   final Widget Function(BuildContext context, int index) itemBuilder;
   const StunSliderHelper({
-    Key? key,
+    super.key,
     required this.controller,
     required this.itemBuilder,
-  }) : super(key: key);
+  });
 
   @override
   State<StunSliderHelper> createState() => _StunSliderHelperState();

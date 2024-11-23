@@ -1,4 +1,4 @@
-# stun_slider_example
+# example
 
 A new Flutter project.
 

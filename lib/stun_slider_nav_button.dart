@@ -5,13 +5,22 @@ class StunSliderNavButton extends StatefulWidget {
   final StunSliderController controller;
   final Widget child;
   final int itemCount;
-  const StunSliderNavButton({
-    Key? key,
-    required this.direction,
+
+  const StunSliderNavButton.prev({
+    super.key,
     required this.controller,
-    required this.child,
     required this.itemCount,
-  }) : super(key: key);
+    this.direction = StunSliderNavDirection.prev,
+    this.child = const Icon(Icons.arrow_back),
+  });
+
+  const StunSliderNavButton.next({
+    super.key,
+    required this.controller,
+    required this.itemCount,
+    this.direction = StunSliderNavDirection.next,
+    this.child = const Icon(Icons.arrow_forward),
+  });
 
   @override
   State<StunSliderNavButton> createState() => _StunSliderNavButtonState();

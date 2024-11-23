@@ -2,8 +2,8 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:stun_slider/stun_slider.dart';
-import 'package:stun_slider_example/slider_item.dart';
-import 'package:stun_slider_example/slider_item_widget.dart';
+import 'package:example/slider_item.dart';
+import 'package:example/slider_item_widget.dart';
 
 void main() {
   runApp(const MyApp());
@@ -75,7 +75,7 @@ class _MyHomePageState extends State<MyHomePage> {
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          StunSliderWidget.builder(
+          StunSlider.builder(
             itemCount: _items.length,
             itemBuilder: (_, index) {
               return SliderItemWidget(
@@ -88,11 +88,9 @@ class _MyHomePageState extends State<MyHomePage> {
           Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              StunSliderNavButton(
-                direction: StunSliderNavDirection.prev,
+              StunSliderNavButton.prev(
                 itemCount: _items.length,
                 controller: _controller,
-                child: const Icon(Icons.arrow_back),
               ),
               StunSliderPagination(
                 controller: _controller,
@@ -106,11 +104,9 @@ class _MyHomePageState extends State<MyHomePage> {
                 },
                 itemCount: _items.length,
               ),
-              StunSliderNavButton(
-                direction: StunSliderNavDirection.next,
+              StunSliderNavButton.next(
                 itemCount: _items.length,
                 controller: _controller,
-                child: const Icon(Icons.arrow_forward),
               ),
             ],
           ),

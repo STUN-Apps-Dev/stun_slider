@@ -1,6 +1,8 @@
 part of 'stun_slider.dart';
 
 class StunSliderScrollBehavior extends MaterialScrollBehavior {
+  const StunSliderScrollBehavior();
+
   @override
   Set<PointerDeviceKind> get dragDevices {
     return {

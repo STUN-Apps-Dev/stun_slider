@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:stun_slider_example/slider_item.dart';
+import 'package:example/slider_item.dart';
 
 class SliderItemWidget extends StatefulWidget {
   final SliderItem item;

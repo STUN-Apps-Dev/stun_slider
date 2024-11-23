@@ -4,15 +4,16 @@ class StunSliderPagination extends StatefulWidget {
   final StunSliderController controller;
   final Widget Function(BuildContext context, int index, bool isActive)
       itemBuilder;
+
   final int itemCount;
   final double spacing;
   const StunSliderPagination({
-    Key? key,
+    super.key,
     required this.controller,
     required this.itemBuilder,
     required this.itemCount,
     this.spacing = 16,
-  }) : super(key: key);
+  });
 
   @override
   State<StunSliderPagination> createState() => _StunSliderPaginationState();
