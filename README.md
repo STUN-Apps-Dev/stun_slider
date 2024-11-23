@@ -7,7 +7,7 @@ It supports the same parameters as the classic `PageView`.
 The package includes helper widgets for controlling the slider and displaying pagination.
 
 ## Localization
-С документацией на русском языке можно ознакомиться по этой ссылке: [https://github.com/STUN-Apps-Dev/stun_slider/blob/master/README_RU.md].
+С документацией на русском языке можно ознакомиться по этой [ссылке](https://github.com/STUN-Apps-Dev/stun_slider/blob/master/README_RU.md).
 
 ## Getting Started
 
