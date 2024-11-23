@@ -7,12 +7,15 @@ class StunSliderPagination extends StatefulWidget {
 
   final int itemCount;
   final double spacing;
+  final Axis scrollDirection;
+
   const StunSliderPagination({
     super.key,
     required this.controller,
     required this.itemBuilder,
     required this.itemCount,
-    this.spacing = 16,
+    this.spacing = 8,
+    this.scrollDirection = Axis.horizontal,
   });
 
   @override
@@ -31,27 +34,43 @@ class _StunSliderPaginationState extends State<StunSliderPagination> {
   @override
   Widget build(BuildContext context) {
     if (widget.itemCount < 2) return const SizedBox.shrink();
-    return Row(
-      mainAxisSize: MainAxisSize.min,
-      children: List.generate(
-        widget.itemCount,
-        (index) {
-          return Container(
-            margin: const EdgeInsets.symmetric(horizontal: 8),
-            child: MouseRegion(
-              cursor: SystemMouseCursors.click,
-              child: GestureDetector(
-                onTap: () => widget.controller.jumpToIndex(index),
-                child: widget.itemBuilder(
-                  context,
-                  index,
-                  _isActive(index),
-                ),
+    switch (widget.scrollDirection) {
+      case Axis.horizontal:
+        return Row(
+          mainAxisSize: MainAxisSize.min,
+          children: _buildChildren(
+            EdgeInsets.symmetric(horizontal: widget.spacing),
+          ),
+        );
+      case Axis.vertical:
+        return Column(
+          mainAxisSize: MainAxisSize.min,
+          children: _buildChildren(
+            EdgeInsets.symmetric(vertical: widget.spacing),
+          ),
+        );
+    }
+  }
+
+  List<Widget> _buildChildren(EdgeInsets margin) {
+    return List.generate(
+      widget.itemCount,
+      (index) {
+        return Container(
+          margin: margin,
+          child: MouseRegion(
+            cursor: SystemMouseCursors.click,
+            child: GestureDetector(
+              onTap: () => widget.controller.jumpToIndex(index),
+              child: widget.itemBuilder(
+                context,
+                index,
+                _isActive(index),
               ),
             ),
-          );
-        },
-      ),
+          ),
+        );
+      },
     );
   }
 

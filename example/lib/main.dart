@@ -1,9 +1,6 @@
-import 'dart:math';
-
+import 'package:example/horizontal_example.dart';
+import 'package:example/vertical_example.dart';
 import 'package:flutter/material.dart';
-import 'package:stun_slider/stun_slider.dart';
-import 'package:example/slider_item.dart';
-import 'package:example/slider_item_widget.dart';
 
 void main() {
   runApp(const MyApp());
@@ -28,19 +25,7 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  late final StunSliderController _controller;
-
-  final List<SliderItem> _items = [
-    SliderItem.random(),
-    SliderItem.random(),
-    SliderItem.random(),
-  ];
-
-  @override
-  void initState() {
-    super.initState();
-    _controller = StunSliderController(PageController());
-  }
+  int _currentPage = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -48,76 +33,27 @@ class _MyHomePageState extends State<MyHomePage> {
       appBar: AppBar(
         title: const Text('Stun Slider Demo App'),
       ),
-      floatingActionButton: Row(
-        mainAxisAlignment: MainAxisAlignment.end,
-        children: [
-          FloatingActionButton(
-            child: const Icon(Icons.add),
-            onPressed: () {
-              _items.add(SliderItem.random());
-              _controller.jumpToIndex(_items.length - 1);
-
-              setState(() {});
-            },
+      bottomNavigationBar: BottomNavigationBar(
+        currentIndex: _currentPage,
+        onTap: (value) => setState(() => _currentPage = value),
+        items: const [
+          BottomNavigationBarItem(
+            icon: SizedBox.shrink(),
+            label: 'Horizontal',
           ),
-          const SizedBox(width: 16),
-          FloatingActionButton(
-            child: const Icon(Icons.minimize),
-            onPressed: () {
-              final random = Random();
-              _items.removeAt(random.nextInt(_items.length));
-              _controller.jumpToIndex(_items.length - 1);
-              setState(() {});
-            },
+          BottomNavigationBarItem(
+            icon: SizedBox.shrink(),
+            label: 'Vertical',
           ),
         ],
       ),
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          StunSlider.builder(
-            itemCount: _items.length,
-            itemBuilder: (_, index) {
-              return SliderItemWidget(
-                item: _items[index],
-              );
-            },
-            controller: _controller,
-          ),
-          const SizedBox(height: 16),
-          Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              StunSliderNavButton.prev(
-                itemCount: _items.length,
-                controller: _controller,
-              ),
-              StunSliderPagination(
-                controller: _controller,
-                itemBuilder: (context, index, isActive) {
-                  return Container(
-                    height: 40,
-                    width: 40,
-                    color: isActive ? Colors.amber : Colors.grey,
-                    child: Center(child: Text('$index')),
-                  );
-                },
-                itemCount: _items.length,
-              ),
-              StunSliderNavButton.next(
-                itemCount: _items.length,
-                controller: _controller,
-              ),
-            ],
-          ),
-          const SizedBox(height: 16),
-          StunSliderHelper(
-            controller: _controller,
-            itemBuilder: (_, index) {
-              return Text('${index + 1} / ${_items.length}');
-            },
-          ),
-        ],
+      body: Card(
+        margin: const EdgeInsets.all(24),
+        elevation: 10,
+        child: [
+          const HorizontalExample(),
+          const VerticalExample(),
+        ][_currentPage],
       ),
     );
   }

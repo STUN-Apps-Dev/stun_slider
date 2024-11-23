@@ -6,6 +6,10 @@
 
 В пакет входят вспомогательные виджеты для управления слайдером и отображения пагинации.
 
+| Horizontal                                                                                           | Vertical                                                                                                      |
+|------------------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------|
+| <img height="800" src="https://github.com/STUN-Apps-Dev/stun_slider/blob/main/assets/horizontal.gif?raw=true"> | <img  height="800" src="https://github.com/STUN-Apps-Dev/stun_slider/blob/main/assets/vertical.gif?raw=true"> |
+
 ## Локализация
 Please refer to the documentation in English at this link: [https://github.com/STUN-Apps-Dev/stun_slider/blob/master/README.md].
 

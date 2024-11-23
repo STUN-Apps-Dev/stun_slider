@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'dart:math' as math;
 
 class SliderItem {
   final double width;
@@ -15,12 +16,9 @@ class SliderItem {
     return SliderItem(
       width: (200 + random.nextInt(200)).toDouble(),
       height: (200 + random.nextInt(200)).toDouble(),
-      color: Color.fromRGBO(
-        random.nextInt(256),
-        random.nextInt(256),
-        random.nextInt(256),
-        1,
-      ),
+      color: Color(
+        (math.Random().nextDouble() * 0xFFFFFF).toInt(),
+      ).withOpacity(1.0),
     );
   }
 

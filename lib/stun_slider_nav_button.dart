@@ -5,6 +5,7 @@ class StunSliderNavButton extends StatefulWidget {
   final StunSliderController controller;
   final Widget child;
   final int itemCount;
+  final Axis scrollDirection;
 
   const StunSliderNavButton.prev({
     super.key,
@@ -12,6 +13,7 @@ class StunSliderNavButton extends StatefulWidget {
     required this.itemCount,
     this.direction = StunSliderNavDirection.prev,
     this.child = const Icon(Icons.arrow_back),
+    this.scrollDirection = Axis.horizontal,
   });
 
   const StunSliderNavButton.next({
@@ -20,6 +22,7 @@ class StunSliderNavButton extends StatefulWidget {
     required this.itemCount,
     this.direction = StunSliderNavDirection.next,
     this.child = const Icon(Icons.arrow_forward),
+    this.scrollDirection = Axis.horizontal,
   });
 
   @override
@@ -48,7 +51,17 @@ class _StunSliderNavButtonState extends State<StunSliderNavButton> {
           cursor: SystemMouseCursors.click,
           child: GestureDetector(
             onTap: _onTap,
-            child: widget.child,
+            child: RotatedBox(
+              quarterTurns: () {
+                switch (widget.scrollDirection) {
+                  case Axis.horizontal:
+                    return 0;
+                  case Axis.vertical:
+                    return 1;
+                }
+              }(),
+              child: widget.child,
+            ),
           ),
         ),
       ),

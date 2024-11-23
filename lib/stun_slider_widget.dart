@@ -195,6 +195,7 @@ class _StunSliderState extends State<StunSlider> {
   @override
   void initState() {
     super.initState();
+    if (widget.itemCount == 0) return;
     _sizes = _prepareSizes();
     _controller = widget.controller ?? StunSliderController();
     _controller.pageController.addListener(_updatePage);
@@ -207,6 +208,8 @@ class _StunSliderState extends State<StunSlider> {
   @override
   void didUpdateWidget(covariant StunSlider oldWidget) {
     super.didUpdateWidget(oldWidget);
+    if (widget.itemCount == 0) return;
+
     if (oldWidget.controller != widget.controller) {
       oldWidget.controller?.removeListener(_updatePage);
       _controller.pageController.addListener(_updatePage);
@@ -228,6 +231,7 @@ class _StunSliderState extends State<StunSlider> {
 
   @override
   Widget build(BuildContext context) {
+    if (widget.itemCount == 0) return SizedBox.shrink();
     return TweenAnimationBuilder<double>(
       curve: widget.animationCurve,
       duration: _getDuration(),
