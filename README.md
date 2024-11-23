@@ -6,9 +6,9 @@ It supports the same parameters as the classic `PageView`.
 
 The package includes helper widgets for controlling the slider and displaying pagination.
 
-| Horizontal                                                                                           | Vertical                                                                                                      |
-|------------------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------|
-| <img height="800" src="https://github.com/STUN-Apps-Dev/stun_slider/blob/main/assets/horizontal.gif?raw=true"> | <img  height="800" src="https://github.com/STUN-Apps-Dev/stun_slider/blob/main/assets/vertical.gif?raw=true"> |
+| Horizontal                                                                                                       | Vertical                                                                                                      |
+|------------------------------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------|
+| <img height="800" src="https://github.com/STUN-Apps-Dev/stun_slider/blob/master/assets/horizontal.gif?raw=true"> | <img  height="800" src="https://github.com/STUN-Apps-Dev/stun_slider/blob/master/assets/vertical.gif?raw=true"> |
 
 ## Localization
 С документацией на русском языке можно ознакомиться по этой [ссылке](https://github.com/STUN-Apps-Dev/stun_slider/blob/master/README_RU.md).
